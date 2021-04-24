@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import * as Joi from 'joi'; // js용 스키마설명언어 이자 데이터 유효성 검사툴
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config'; //env설정
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RestaurnatsModule } from './restaurnats/restaurnats.module';
+import { Restaurant } from './restaurnats/entities/restaurant.entity';
 
 @Module({
   imports: [
@@ -29,8 +30,9 @@ import { RestaurnatsModule } from './restaurnats/restaurnats.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
+      entities: [Restaurant] //DB
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true
