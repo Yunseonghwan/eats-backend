@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import * as jwt from 'jsonwebtoken';
 import { CreateAccountInput } from "./dtos/create-account.dto";
 import { LoginInput } from "./dtos/login.dto";
 import { User } from "./entities/user.entity";
@@ -19,18 +18,14 @@ export class UsersService {
         try{
             const exist = await this.users.findOne({email});
             if(exist){
-                // make error
                 return { ok: false, error: 'There is a user with that email already' };
             }
             await this.users.save(this.users.create({email, password, role}));
             return { ok: true };
         }catch(e){
-            //make error
             console.log(e)
             return { ok: false, error: "Couldn't create account" };
         }
-        // check new user
-        //create user & hash the password
     }
     async login({
         email,
@@ -63,5 +58,8 @@ export class UsersService {
             error,
           };
         }
+      }
+      async findById(id:number): Promise<User>{
+          return this.users.findOne({id});
       }
 }
