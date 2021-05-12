@@ -45,7 +45,6 @@ export class UsersService {
       this.mailService.sendVerificationEmail(user.email, verification.code);
       return { ok: true };
     } catch (e) {
-      console.log(e);
       return { ok: false, error: "Couldn't create account" };
     }
   }
@@ -69,7 +68,7 @@ export class UsersService {
           error: "Wrong password",
         };
       }
-      const token = this.jwtService.sign({ id: user.id });
+      const token = this.jwtService.sign(user.id);
       return {
         ok: true,
         token,
@@ -77,7 +76,7 @@ export class UsersService {
     } catch (error) {
       return {
         ok: false,
-        error,
+        error: "Can't log user in.",
       };
     }
   }
