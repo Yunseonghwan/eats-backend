@@ -12,16 +12,14 @@ export class MailService {
 
   async sendEmail(
     subject: string,
-    eats: string,
-    // template: string,
+    template: string,
     emailVars: EmailVar[],
   ): Promise<boolean> {
     const form = new FormData();
     form.append("from", `hwan from Eats <mailgun@${this.options.domain}>`);
     form.append("to", `sunghwan0208@naver.com`);
     form.append("subject", subject);
-    // form.append("template", template);
-    form.append("template", eats);
+    form.append("template", template);
     emailVars.forEach((eVar) => form.append(`v: ${eVar.key}`, eVar.value));
     try {
       await got.post(
