@@ -18,7 +18,7 @@ export class RestaurantResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
 
   @Mutation((returns) => CreateRestaurantOutput)
-  // @Role(["Owner"])
+  @Role(["Owner"])
   async createRestaurant(
     @AuthUser() authUser: User,
     @Args("input") createRestaurantInput: CreateRestaurantInput,
@@ -32,9 +32,9 @@ export class RestaurantResolver {
   @Mutation((returns) => CreateRestaurantOutput)
   @Role(["Owner"])
   editRestaurant(
-    @AuthUser() authUser: User,
+    @AuthUser() owner: User,
     @Args("input") editRestaurantInput: EditRestaurantInput,
-  ): EditRestaurantOutput {
-    return { ok: true };
+  ): Promise<EditRestaurantOutput> {
+    return this.restaurantService.editRestaurant(owner, editRestaurantInput);
   }
 }
