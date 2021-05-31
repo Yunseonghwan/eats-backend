@@ -1,15 +1,15 @@
-import { Test } from "@nestjs/testing";
-import got from "got";
-import * as FormData from "form-data";
-import { MailService } from "./mail.service";
-import { CONFIG_OPTIONS } from "src/common/common.constant";
+import { Test } from '@nestjs/testing';
+import got from 'got';
+import * as FormData from 'form-data';
+import { CONFIG_OPTIONS } from 'src/common/common.constants';
+import { MailService } from './mail.service';
 
-jest.mock("got");
-jest.mock("form-data");
+jest.mock('got');
+jest.mock('form-data');
 
-const TEST_DOMAIN = "test-domain";
+const TEST_DOMAIN = 'test-domain';
 
-describe("MailService", () => {
+describe('MailService', () => {
   let service: MailService;
 
   beforeEach(async () => {
@@ -19,9 +19,9 @@ describe("MailService", () => {
         {
           provide: CONFIG_OPTIONS,
           useValue: {
-            apiKey: "test-apiKey",
+            apiKey: 'test-apiKey',
             domain: TEST_DOMAIN,
-            fromEmail: "test-fromEmail",
+            fromEmail: 'test-fromEmail',
           },
         },
       ],
@@ -29,36 +29,36 @@ describe("MailService", () => {
     service = module.get<MailService>(MailService);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe("sendVerificationEmail", () => {
-    it("should call sendEmail", () => {
+  describe('sendVerificationEmail', () => {
+    it('should call sendEmail', () => {
       const sendVerificationEmailArgs = {
-        email: "email",
-        code: "code",
+        email: 'email',
+        code: 'code',
       };
-      jest.spyOn(service, "sendEmail").mockImplementation(async () => true);
+      jest.spyOn(service, 'sendEmail').mockImplementation(async () => true);
       service.sendVerificationEmail(
         sendVerificationEmailArgs.email,
         sendVerificationEmailArgs.code,
       );
       expect(service.sendEmail).toHaveBeenCalledTimes(1);
       expect(service.sendEmail).toHaveBeenCalledWith(
-        "Verify Your Email",
-        "verify-email",
+        'Verify Your Email',
+        'verify-email',
         [
-          { key: "code", value: sendVerificationEmailArgs.code },
-          { key: "username", value: sendVerificationEmailArgs.email },
+          { key: 'code', value: sendVerificationEmailArgs.code },
+          { key: 'username', value: sendVerificationEmailArgs.email },
         ],
       );
     });
   });
-  describe("sendEmail", () => {
-    it("sends email", async () => {
-      const ok = await service.sendEmail("", "", []);
-      const formSpy = jest.spyOn(FormData.prototype, "append");
+  describe('sendEmail', () => {
+    it('sends email', async () => {
+      const ok = await service.sendEmail('', '', []);
+      const formSpy = jest.spyOn(FormData.prototype, 'append');
       expect(formSpy).toHaveBeenCalled();
       expect(got.post).toHaveBeenCalledTimes(1);
       expect(got.post).toHaveBeenCalledWith(
@@ -67,11 +67,11 @@ describe("MailService", () => {
       );
       expect(ok).toEqual(true);
     });
-    it("fails on error", async () => {
-      jest.spyOn(got, "post").mockImplementation(() => {
+    it('fails on error', async () => {
+      jest.spyOn(got, 'post').mockImplementation(() => {
         throw new Error();
       });
-      const ok = await service.sendEmail("", "", []);
+      const ok = await service.sendEmail('', '', []);
       expect(ok).toEqual(false);
     });
   });

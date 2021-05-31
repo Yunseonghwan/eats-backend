@@ -1,18 +1,21 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/users/entities/user.entity";
-import { Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
+
 import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
-} from "./dtos/create-restaurant.dto";
+} from './dtos/create-restaurant.dto';
+
 import {
   EditRestaurantInput,
   EditRestaurantOutput,
-} from "./dtos/edit-restaurant.dto";
-import { Category } from "./entities/category.entity";
-import { Restaurant } from "./entities/restaurant.entity";
-import { CategoryRepository } from "./repositores/category.repository";
+} from './dtos/edit-restaurant.dto';
+
+import { Category } from './entities/cetegory.entity';
+import { Restaurant } from './entities/restaurant.entity';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Injectable()
 export class RestaurantService {
@@ -32,16 +35,16 @@ export class RestaurantService {
       const category = await this.categories.getOrCreate(
         createRestaurantInput.categoryName,
       );
-
       newRestaurant.category = category;
       await this.restaurants.save(newRestaurant);
       return {
         ok: true,
+        restaurantId: newRestaurant.id,
       };
     } catch {
       return {
         ok: false,
-        error: "Could not create restaurant",
+        error: 'Could not create restaurant',
       };
     }
   }
@@ -57,7 +60,7 @@ export class RestaurantService {
       if (!restaurant) {
         return {
           ok: false,
-          error: "Restaurant not found",
+          error: 'Restaurant not found',
         };
       }
       if (owner.id !== restaurant.ownerId) {
@@ -86,7 +89,7 @@ export class RestaurantService {
     } catch (error) {
       return {
         ok: false,
-        error: "Could not edit Restaurant",
+        error: 'Could not edit Restaurant',
       };
     }
   }

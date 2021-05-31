@@ -1,19 +1,19 @@
-import { Test } from "@nestjs/testing";
-import * as jwt from "jsonwebtoken";
-import { CONFIG_OPTIONS } from "src/common/common.constant";
-import { JwtService } from "./jwt.service";
+import { Test } from '@nestjs/testing';
+import * as jwt from 'jsonwebtoken';
+import { CONFIG_OPTIONS } from 'src/common/common.constants';
+import { JwtService } from './jwt.service';
 
-const TEST_KEY = "testKey";
+const TEST_KEY = 'testKey';
 const USER_ID = 1;
 
-jest.mock("jsonwebtoken", () => {
+jest.mock('jsonwebtoken', () => {
   return {
-    sign: jest.fn(() => "TOKEN"),
+    sign: jest.fn(() => 'TOKEN'),
     verify: jest.fn(() => ({ id: USER_ID })),
   };
 });
 
-describe("JwtService", () => {
+describe('JwtService', () => {
   let service: JwtService;
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -27,21 +27,20 @@ describe("JwtService", () => {
     }).compile();
     service = module.get<JwtService>(JwtService);
   });
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
-  describe("sign", () => {
-    it("should return a sign token", () => {
-      const ID = 1;
-      const token = service.sign(ID);
-      expect(typeof token).toBe("string");
+  describe('sign', () => {
+    it('should return a signed token', () => {
+      const token = service.sign(USER_ID);
+      expect(typeof token).toBe('string');
       expect(jwt.sign).toHaveBeenCalledTimes(1);
       expect(jwt.sign).toHaveBeenLastCalledWith({ id: USER_ID }, TEST_KEY);
     });
   });
-  describe("verify", () => {
-    it("should return the decoded token", () => {
-      const TOKEN = "TOKEN";
+  describe('verify', () => {
+    it('should return the decoded token', () => {
+      const TOKEN = 'TOKEN';
       const decodedToken = service.verify(TOKEN);
       expect(decodedToken).toEqual({ id: USER_ID });
       expect(jwt.verify).toHaveBeenCalledTimes(1);

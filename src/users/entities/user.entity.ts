@@ -3,48 +3,50 @@ import {
   InputType,
   ObjectType,
   registerEnumType,
-} from "@nestjs/graphql";
-import { CoreEntity } from "src/common/entities/core.entity";
-import * as bcrypt from "bcrypt";
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from "typeorm";
-import { InternalServerErrorException } from "@nestjs/common";
-import { IsBoolean, IsEmail, IsEnum, IsString } from "class-validator";
-import { Restaurant } from "src/restaurnats/entities/restaurant.entity";
-
+} from '@nestjs/graphql';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { CoreEntity } from 'src/common/entities/core.entity';
+import { InternalServerErrorException } from '@nestjs/common';
+import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 export enum UserRole {
-  Client = "Client",
-  Owner = "Owner",
-  Delivery = "Delivery",
+  Client = 'Client',
+  Owner = 'Owner',
+  Delivery = 'Delivery',
 }
 
-registerEnumType(UserRole, { name: "UserRole" });
+registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType("UserInputType", { isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
   @Column({ unique: true })
-  @Field((type) => String)
+  @Field(type => String)
   @IsEmail()
   email: string;
 
   @Column({ select: false })
-  @Field((type) => String)
+  @Field(type => String)
   @IsString()
   password: string;
 
-  @Column({ type: "enum", enum: UserRole })
-  @Field((type) => UserRole)
+  @Column({ type: 'enum', enum: UserRole })
+  @Field(type => UserRole)
   @IsEnum(UserRole)
   role: UserRole;
 
   @Column({ default: false })
-  @Field((type) => Boolean)
+  @Field(type => Boolean)
   @IsBoolean()
   verified: boolean;
 
-  @Field((type) => [Restaurant])
-  @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner)
+  @Field(type => [Restaurant])
+  @OneToMany(
+    type => Restaurant,
+    restaurant => restaurant.owner,
+  )
   restaurants: Restaurant[];
 
   @BeforeInsert()
